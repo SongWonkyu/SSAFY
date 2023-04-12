@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>index</h1>
+    <hr>
+    {% if message  %}
+        <p>{{ message }}</p>
+    {% else %}
+        {% for todo in todos %}
+        <p>
+            {{ todo.author }} - {{ todo.title }}
+            
+            <form action="{% url 'todos:delete' todo.pk %}" method='POST'>
+                {% csrf_token %}
+                <button type='submit' class='btn btn-danger'>Delete</button>
+            </form>
+
+            {% if todo.completed %}
+                <button type='submit'>완료!</button>
+            {% else %}
+                <button type='submit'>진행중..</button>
+            {% endif %}
+            
+        </p>
+        {% endfor %}
+    {% endif %}
+
+{% endblock content %}

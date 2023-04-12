@@ -2,28 +2,38 @@
 
 {% block content %}
 
-    <h1>index</h1>
-    <hr>
-    {% if message  %}
-        <p>{{ message }}</p>
-    {% else %}
-        {% for todo in todos %}
-        <p>
-            {{ todo.author }} - {{ todo.title }}
-            
-            <form action="{% url 'todos:delete' todo.pk %}" method='POST'>
-                {% csrf_token %}
-                <button type='submit' class='btn btn-danger'>Delete</button>
-            </form>
+<h1>Todo</h1>
 
+<hr>
+{% if message %} 
+{{message}}
+{% else %}
+{% for todo in todos  %}
+
+<p>{% if request.user == todo.author %}
+    {{todo.author}} - {{todo.title}}
+    <div>
+        <p>{{ todo.title }}</p>
+        <form action="{% url 'todos:toggle' todo.pk %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="complete-btn completed">
+            
             {% if todo.completed %}
-                <button type='submit'>완료!</button>
+              취소하기
             {% else %}
-                <button type='submit'>진행중..</button>
+              완료하기
             {% endif %}
-            
-        </p>
-        {% endfor %}
-    {% endif %}
+          </button>
+         
+        </form>
+        
+      </div> 
 
+    <form method="post" action="{% url 'todos:delete' pk=todo.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+</p>{% endif %}
+{% endfor %}
+{% endif %}
 {% endblock content %}

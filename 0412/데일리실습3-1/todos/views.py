@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Todo
 from .forms import TodoForm
 from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 
@@ -46,8 +47,9 @@ def delete(request, pk):
         todo.delete()
         return redirect('todos:index')
 
-def toggle(request, user_pk):
-    if request.user.is_authenticated:
-        todo = get_object_or_404(Todo, pk=user_pk)
-        todo.completed = not todo.completed  # Toggle the value
+def toggle(request, pk):
+    todo = get_object_or_404(Todo,pk=pk)
+    if request.user == todo.author:
+        todo.completed = not todo.completed
         todo.save()
+    return redirect('todos:index')

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <ul id="fruits-list">
+  </ul>
+
+  <script>
+    const fruits = ['Apple', 'Banana', 'Orange']
+
+    /*
+    const Apple = document.createElement('li')
+    Apple.innerText = fruits[0]
+    const Banana = document.createElement('li')
+    Banana.innerText = fruits[1]
+    const Orange = document.createElement('li')
+    Orange.innerText = fruits[2]
+
+    const parent = document.querySelector('#fruits-list')
+    parent.appendChild(Apple)
+    parent.appendChild(Banana)
+    parent.appendChild(Orange) 
+    */
+
+    fruits.forEach(function(){
+
+    })
+    fruits.forEach((fruit) => {
+      const li = document.createElement('li')
+      li.innerText = fruit
+
+      document.querySelector('#fruits-list').appendChild(li)
+    })
+
+  
+  
+
+  
+
+  </script>
+</body>
+</html>

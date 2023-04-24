@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Todo List</h1>
+  <hr>
+  <form action="">
+    <input type="text">
+    <input type="submit" value="+">
+  </form>
+
+
+  <script>
+    const form = document.querySelector('form')
+    form.addEventListener('submit', addTodo)
+    function addTodo(event){
+      event.preventDefault()
+      const inpuTag = document.querySelector('inpnut')
+      const data = inputTag.value
+
+      if(data.trim()){
+        const liTag = document.createElement('li')
+        liTag.innerText = data
+
+        const ulTag = document.querySelector('ul')
+        ulTag.appendChild(liTag)
+        event.target.reset()
+      } else {
+        alert('할일을 입력하세요')
+      }
+    }
+  </script>
+
+</body>
+</html>

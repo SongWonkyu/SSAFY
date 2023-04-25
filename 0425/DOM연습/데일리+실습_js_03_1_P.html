@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // createElement()는 JS의 Document객체의 메서드 중 하나이다. 이 메서드를 사용하면 새로운 HTML 요소를 생성할 수 있다. createElement 메서드를 호출하면, 지정된 요소 이름의 빈 요소 객체를 만든다. 새로운 요소 객체를 만든 후, innerHTML 속성을 이용하여 요소의 내용을 채울 수 있다.
+    
+    // 1. h1
+    const h1 = document.createElement('h1')
+    h1.innerText = '오늘의 Todo'
+
+    // ul, li
+    const ul = document.createElement('ul')
+
+    const li = document.createElement('li')
+    li.innerText = '양치하기'
+    ul.appendChild(li) // li 요소를 ul 요소의 자식 요소로 추가
+
+    const li2 = document.createElement('li')
+    li2.innerText = '공부하기'
+    ul.appendChild(li2)
+
+    const li3 = document.createElement('li')
+    li3.innerText = '휴식하기'
+    ul.appendChild(li3)
+
+    // HTML에 h1, ul, li추가시키기.
+    const body = document.querySelector('body')
+    body.append(h1, ul)
+    
+  </script>
+</body>
+
+</html>

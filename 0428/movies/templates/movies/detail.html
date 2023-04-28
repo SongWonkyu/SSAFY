@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% block content %}
+
+<img style="width: 150px" src="{{ movie.poster_path }}" />
+<p>제목 : {{ movie.title }}</p>
+<p>개봉일 : {{ movie.release_date }}</p>
+<p>인기 : {{ movie.popularity }}</p>
+<p>관객 수 : {{ movie.vote_count }}</p>
+<p>평점 : {{ movie.vote_average }}</p>
+<p>영화 내용 : {{ movie.overview }}</p>
+<p>
+  장르 : {% for genre in genres %}
+  <span>{{ genre.name }}</span>
+  {% endfor %}
+</p>
+<a
+  href="{% url 'movies:recommended' movie_pk=movie.pk %}"
+  class="btn btn-primary"
+  >비슷한 영화 추천받기</a
+>
+
+{% endblock %} {% block script %} {% endblock script %}

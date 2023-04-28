@@ -1,0 +1,47 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <h2>추천 영화 리스트</h2>
+  <hr />
+  <div class="row">
+    <div class="col-md-6">
+      <img
+        src="{{ movie.poster_path }}"
+        alt="{{ movie.title }}"
+        class="img-fluid mb-4"
+      />
+      <h4>{{ movie.title }}</h4>
+      <p>{{ movie.overview }}</p>
+    </div>
+    <div class="col-md-6">
+      <h4>추천 영화</h4>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>제목</th>
+            <th>포스터</th>
+            <th>유사도</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r_movie in movies %}
+          <tr>
+            <td>
+              <a href="{% url 'movies:detail' r_movie.0 %}">{{ r_movie.1 }}</a>
+            </td>
+            <td>
+              <img
+                src="{{ r_movie.2 }}"
+                alt="{{ r_movie.1 }}"
+                class="img-thumbnail"
+                style="width: 50px"
+              />
+            </td>
+            <td>{{ r_movie.3 }}%</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

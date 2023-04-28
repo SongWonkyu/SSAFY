@@ -1,0 +1,98 @@
+{% extends 'base.html' %} {% block content %}
+<h2 class="text-center">DETAIL</h2>
+<h3>{{ review.pk }} 번째 글</h3>
+<hr />
+<p>제목: {{ review.title }}</p>
+<p>영화 제목: {{ review.movie_title }}</p>
+<p>내용: {{ review.content }}</p>
+<p>평점: {{ review.rank }}</p>
+<p>작성 시각: {{ review.created_at }}</p>
+<p>수정 시각: {{ review.updated_at }}</p>
+<hr />
+<h4>댓글 목록</h4>
+{% if comments|length %}
+<p><b>{{ comments|length }}개의 댓글이 있습니다.</b></p>
+{% endif %} {% for comment in comments %}
+<div>
+  <form class="like-form" data-commentlike-id="{{comment.pk}}">
+    {% csrf_token %}
+    <li>
+      <span>
+        {{ comment.user }} - {{ comment.content }} {% if user in
+        comment.commentlike_users.all %}
+        <button id="commentlike-{{comment.pk}}">좋아요 취소</button>
+        {% else %}
+        <button id="commentlike-{{comment.pk}}">좋아요</button>
+        {% endif %}
+      </span>
+      <span id="commentlike-count-{{comment.pk}}">
+        좋아요 수 : {{comment.commentlike_users.all|length}}
+      </span>
+      {% for second_comment in comment.second_comment.all %}
+      <ul>
+        {{ second_comment.content }} - {{ second_comment.user }}
+      </ul>
+      {% endfor %}
+    </li>
+  </form>
+
+  <form
+    action="{% url 'community:second_comment' review.pk comment.pk %}"
+    method="POST"
+  >
+    {% csrf_token %} {{ second_comment_form.as_p }}
+    <input type="submit" value="대댓글 작성" />
+  </form>
+</div>
+{% empty %}
+<p><b>댓글이 없어요..</b></p>
+{% endfor %}
+
+<hr />
+{% if user.is_authenticated %}
+<form action="{% url 'community:create_comment' review.pk %}" method="POST">
+  {% csrf_token %} {{ comment_form }}
+  <input type="submit" />
+</form>
+{% else %}
+<a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
+{% endif %}
+<a href="{% url 'community:index' %}">[back]</a>
+{% endblock %} {% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  const comments = document.querySelectorAll(".like-form");
+  const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+  comments.forEach((comment_like) => {
+    comment_like.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const commentId = event.target.dataset.commentlikeId;
+      axios({
+        method: "post",
+        url: `/community/comments/${commentId}/commentlike/`,
+        headers: { "X-CSRFToken": csrftoken },
+      })
+        .then((response) => {
+          const commentLiked = response.data.is_commentliked;
+          const spanTag = document.querySelector(
+            `#commentlike-count-${commentId}`
+          );
+          const commentlikeBtn = document.querySelector(
+            `#commentlike-${commentId}`
+          );
+
+          if (commentLiked === true) {
+            commentlikeBtn.innerText = "좋아요 취소";
+            spanTag.innerText = response.data.count;
+          } else {
+            commentlikeBtn.innerText = "좋아요";
+            spanTag.innerText = response.data.count;
+          }
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    });
+  });
+</script>
+{% endblock script %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Community</h1>
+<hr />
+{% for review in reviews %}
+<p>
+  작성자 :
+  <a href="{% url 'accounts:profile' review.user.username %}"
+    >{{ review.user }}</a
+  >
+</p>
+<p>글 번호: {{ review.pk }}</p>
+<p>글 제목: {{ review.title }}</p>
+<p>글 내용: {{ review.content }}</p>
+<form class="like-form" data-review-id="{{review.pk}}">
+  {% csrf_token %} {% if user in review.like_users.all %}
+  <button
+    id="like-{{ review.pk }}"
+    style="border: 0.5px; background-color: transparent"
+  >
+    UNLIKE💔
+  </button>
+  {% else %}
+  <button
+    id="like-{{ review.pk }}"
+    style="border: 0.5px; background-color: transparent"
+  >
+    LIKE❤️
+  </button>
+  {% endif %}
+</form>
+<p>
+  <span id="like-count-{{review.pk}}"> {{review.like_users.all|length }} </span>
+  명이 이 글을 좋아합니다.
+</p>
+<a href="{% url 'community:detail' review.pk %}">[detail]</a>
+<hr />
+{% endfor %} {% endblock content %} {% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  const reviews = document.querySelectorAll(".like-form");
+  const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+  reviews.forEach((review) => {
+    review.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const reviewId = event.target.dataset.reviewId;
+
+      axios({
+        method: "post",
+        url: `/community/${reviewId}/like/`,
+        headers: { "X-CSRFToken": csrftoken },
+      })
+        .then((response) => {
+          const isLiked = response.data.is_liked;
+          const spanTag = document.querySelector(`#like-count-${reviewId}`);
+          const likeBtn = document.querySelector(`#like-${reviewId}`);
+          if (isLiked === true) {
+            likeBtn.innerText = "UNLIKE💔";
+            spanTag.innerText = response.data.count;
+          } else {
+            likeBtn.innerText = "LIKE❤️";
+            spanTag.innerText = response.data.count;
+          }
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    });
+  });
+</script>
+{% endblock script %}

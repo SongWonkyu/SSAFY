@@ -1,0 +1,13 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Movies</h1>
+<hr />
+<h3>전체 영화 목록</h3>
+<hr />
+{% for movie in movies %}
+<a href="{% url 'movies:detail' movie.pk %}"
+  ><img style="width: 170px" src="{{ movie.poster_path }}"
+/></a>
+
+{% endfor %} {% endblock %} {% block script %}
+<script></script>
+{% endblock script %}

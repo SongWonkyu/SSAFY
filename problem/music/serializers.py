@@ -18,16 +18,15 @@ class MusicSerializer(serializers.ModelSerializer):
 # 문제 11. 각 음악 정보에 몇 개의 리뷰가 있는지 확인할 수 있도록 review_count 필드를 아래 클래스에 추가하시오. 
 # 이 때, review_count 필드는 읽기 전용(read_only)이 되도록 설정합니다.
 class MusicReviewCntSerializer(serializers.ModelSerializer):
-    class ReviewSerializer(serializers.ModelSerializer):
-    
+    review_set = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    review_count = serializers.IntegerField(source='review_set.count', read_only=True)
+    class ReviewSerializer(serializers.ModelSerializer): 
         class Meta:
             model = Review
             fields = '__all__'
             read_only_feilds = ('music',)
     music = Music()
-    review_set = ReviewSerializer(many=True, read_only=True)
     
-    review_count = serializers.IntegerField(source='review_set.count', read_only=True)
     class Meta:
         model = Music
         fields = '__all__'
@@ -41,4 +40,4 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
-        read_only_feilds = ('music',) # read_only 필드에 뮤직을 추가하여 뮤직 필드를 사용자가 입력할 수 없게 만든다.
+        read_only_fields = ('music',) # read_only 필드에 뮤직을 추가하여 뮤직 필드를 사용자가 입력할 수 없게 만든다.

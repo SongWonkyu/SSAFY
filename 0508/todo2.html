@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .done {
+        text-decoration: line-through;
+        color: grey;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Todo List</h1>
+
+      <!-- 상태별 목록보기 필터 -->
+      <select v-model="status">
+        <option value="all">전체</option>
+        <option value="ing">진행중</option>
+        <option value="completed">완료</option>
+      </select>
+
+      <!-- todo 입력 -->
+      <input type="text" v-model="content" @keyup.enter="addTodo" />
+      <button @click="addTodo">+</button>
+
+      <!-- todo 목록 출력 -->
+      <ul>
+        <li v-for="todo in todoListByStatus" :key="todo.id">
+          <input
+            type="checkbox"
+            :checked="todo.completed"
+            @click="toggleTodo(todo)"
+          />
+          <span :class="{done: todo.completed}">{{ todo.content }}</span>
+        </li>
+      </ul>
+
+      <button @click="deleteTodoList">완료 목록 삭제</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+      // 로컬 스토리지에서 Todo List 를 저장하고 불러오는 객체
+      const todoStorage = {
+        APP_KEY: "TODO-LIST-APP", // 저장할 키 값
+        save(todoList) {
+          // Todo List 를 로컬 스토리지에 저장하는 함수
+          localStorage.setItem(this.APP_KEY, JSON.stringify(todoList));
+        },
+        load() {
+          // 로컬 스토리지에서 Todo List 를 불러오는 함수
+          return JSON.parse(localStorage.getItem(this.APP_KEY)) || [];
+        },
+      };
+
+      // Vue 인스턴스 생성
+      const app = new Vue({
+        el: "#app", // Vue 인스턴스를 적용할 HTML 요소의 id 값
+        data: {
+          status: "all", // 상태별 보기 필터 기본값
+          content: "", // Todo 입력 내용
+          todoList: todoStorage.load(), // Todo List
+        },
+        methods: {
+          toggleTodo(todo) {
+            // Todo 완료 상태 토글 함수
+            todo.completed = !todo.completed;
+          },
+          addTodo() {
+            // 새로운 Todo 추가 함수
+            if (!this.content.trim()) {
+              // Todo 내용이 비어있는 경우 경고창 출력 후 종료
+              alert("내용을 입력하세요.");
+              return;
+            } else {
+              this.todoList.push({
+                // Todo List 배열에 새로운 Todo 객체 추가
+                content: this.content, // Todo 내용
+                completed: false, // 완료 여부
+                id: new Date().getTime(), // 고유 ID 값
+              });
+              this.content = ""; // Todo 입력
+            }
+          },
+          computed: {
+            todoListByStatus() {
+              // 선택한 상태별로 Todo List를 필터링하는 computed 속성
+              if (this.status === "ing") {
+                // 진행 중인 Todo만 필터링
+                return this.todoList.filter((todo) => !todo.completed);
+              } else if (this.status === "completed") {
+                // 완료된 Todo만 필터링
+                return this.todoList.filter((todo) => todo.completed);
+              }
+              return this.todoList; // 모든 Todo를 반환
+            },
+          },
+          watch: {
+            todoList: {
+              // todoList 데이터가 변경될 때마다 로컬 스토리지에 저장
+              handler: function (todoList) {
+                todoStorage.save(todoList);
+              },
+              deep: true,
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
+
+<!--
+// 이하 주석 
+// Vue 인스턴스 생성 및 정의 
+// Vue.js에서는 데이터, DOM, 로직 등을 하나의 컴포넌트로 관리 
+// Vue 인스턴스를 생성하고 정의하여 컴포넌트를 관리 
+// el속성에 Vue 인스턴스를 적용할 HTML 요소의 id 값을 지정 
+// data 속성에 상태 데이터 정의 
+// methods 속성에 메서드 정의 
+// computed 속성에 상태 데이터를 기반으로 계산한 값을 반환하는 속성 정의 // watch 속성에 상태 데이터 변화를 감지하여 처리할 함수 정의
+
+  -->

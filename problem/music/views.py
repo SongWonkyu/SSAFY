@@ -28,17 +28,15 @@ def music_detail(request, music_pk):
     # 문제 3. 찾으려는 데이터가 없으면 404 상태 코드를 반환할 수 있도록 아래 코드를 완성하시오.
     music = get_object_or_404(Music, pk = music_pk)
     if request.method == 'GET':
-        
         serializer = MusicSerializer(music)
         return Response(serializer.data)
-        
-    
+
     # 문제 4. 음악 데이터를 삭제하고 {'delete': 삭제되는음악pk} 형태의 JSON으로 반환하도록 코드를 완성하시오.
     if request.method == 'DELETE':
-        a = music_pk
+        music_pk = music_pk
         music.delete()
         result = {
-            'delete': a    
+            'delete': music_pk   
         }
         return Response(result)
     
@@ -69,10 +67,9 @@ def review_create(request, music_pk):
     if request.method == 'POST':
         music = get_object_or_404(Music, pk=music_pk)
         serializer = ReviewSerializer(data = request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save(music = music)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -91,6 +88,7 @@ def review_detail(request, review_pk):
     # 삭제가 정상적으로 완료되면 {'delete': 삭제된리뷰PK} 형태인 JSON이 204 상태코드와 함께 반환됩니다.
 
     if request.method == 'DELETE':
+        review_pk = review_pk
         review.delete()
         result = {
             'delete': review_pk

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo</title>
+    <style>
+      .completed{
+        color: grey;
+        text-decoration: line-through;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <!-- 헤더 -->
+      <h1>Todo List</h1> 
+      
+      <!-- 새로운 todo 항목 입력 및 추가 버튼 -->
+      <input type="text" v-model="newTodo" @keyup.enter="addTodo">
+      <button @click="addTodo">+</button>
+      
+      <!-- todo 목록 출력 -->
+      <ul>
+        <!-- 각 todo 항목에 대한 반복문 -->
+        <li v-for="(todo, index) in todos":key="`todo-${index}`">
+          <input type="checkbox" v-model="todo.completed">
+          <span :class="{completed:todo.completed}">{{ todo.text }}</span>
+        </li>
+      </ul>
+
+      <!-- 완료된 항목 삭제 버튼 -->
+      <!-- 이 버튼을 누르면 li에 체크된 todo가 삭제됨 -->
+      <button @click="removeCompleted">완료 목록 삭제</button>
+    </div>
+
+  <!-- vue 불러오기 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data:{
+        // 새로운 todo 항목 입력값
+        newTodo: '',
+        // todo 항목을 담고 있는 배열
+        todos: [],
+      },
+      methods:{
+        addTodo(){
+          if (this.newTodo.trim() != ''){
+            this.todos.push({
+              text: this.newTodo,
+              completed: false
+            })
+            // 입력값 초기화 
+            this.newTodo = ''
+          }else{
+            alert('todo가 입력되지 않았습니다.')
+          }
+        },
+        // todos 배열에서 completed가 true인 항목만 제거하는 filter 메소드를 사용함
+        // completed 속성 값이 false인 요소들을 모아서 새로운 배열을 만들어 반환
+        // 새로운 배열을 다시 this.todos 배열로 할당함으로써, completed 속성 값이 true인 요소들은 삭제
+        removeCompleted(){
+          this.todos = this.todos.filter(todo => !todo.completed);
+        }
+      }
+    })
+  </script>
+  </body>
+</html>

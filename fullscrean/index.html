@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./style.css" />
+
     <title>Document</title>
     <link
       rel="stylesheet"
@@ -26,17 +27,27 @@
           </div>
         </header>
 
-        <pre class="slogan">
-          Every ;ego has 
-          different</pre
-        >
-        <p>
+        <div id="text-container">
+          <span id="typed-text"></span><span id="cursor" class="blink"></span>
+        </div>
+        <p class="scrollinfo">
           Scroll for ego expand <i class="fa-regular fa-arrow-down-long"></i>
         </p>
 
         <div class="bg-video">
           <video class="bg-video__content" autoplay muted loop>
             <source src="./Untitled.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        <div class="transition-video2">
+          <video
+            id="transition-video2"
+            class="bg-video__content2"
+            autoplay
+            muted
+          >
+            <source src="./trasition.mp4" type="video/mp4" />
           </video>
         </div>
       </section>
@@ -51,5 +62,6 @@
     </div>
     <script src="https://unpkg.com/pageable@latest/dist/pageable.min.js"></script>
     <script src="./main.js"></script>
+    <script src="./typing.js"></script>
   </body>
 </html>
